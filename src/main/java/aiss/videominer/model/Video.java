@@ -13,7 +13,6 @@ import java.util.List;
 @Entity
 @Table(name = "Video")
 public class Video {
-
     @Id
     @JsonProperty("id")
     private String id;
