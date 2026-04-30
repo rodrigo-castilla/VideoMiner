@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+//Clase que se conecta con la API de Peertube, recoge los datos y los transforma al modelo comun
 @Service
 public class PeerTubeService {
 
