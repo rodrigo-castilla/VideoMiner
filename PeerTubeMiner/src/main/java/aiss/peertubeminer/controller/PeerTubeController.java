@@ -1,4 +1,4 @@
-package main.java.aiss.peertubeminer.controller;
+package aiss.peertubeminer.controller;
 
 import aiss.peertubeminer.model.PTAccountDTO;
 import aiss.peertubeminer.model.PTCaptionDTO;
