@@ -1,57 +1,47 @@
 package aiss.peertubeminer.controller;
 
-import aiss.peertubeminer.model.PTAccountDTO;
-import aiss.peertubeminer.model.PTCaptionDTO;
-import aiss.peertubeminer.model.PTChannelDTO;
-import aiss.peertubeminer.model.PTCommentDTO;
-import aiss.peertubeminer.model.PTVideoDTO;
+import aiss.peertubeminer.service.PeerTubeService;
+import aiss.peertubeminer.service.VideoMinerService;
+import aiss.videominer.model.Channel;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/peertube")
 @CrossOrigin(origins = "*")
 public class PeerTubeController {
 
-    @GetMapping("/status")
-    public String status() {
-        return "PeerTubeMiner is running";
+    private final PeerTubeService peerTubeService;
+    private final VideoMinerService videoMinerService;
+
+    //Inyección de dependencias de Spring Boot
+    public PeerTubeController(PeerTubeService peerTubeService, VideoMinerService videoMinerService) {
+        this.peerTubeService = peerTubeService;
+        this.videoMinerService = videoMinerService;
     }
 
-    @PostMapping("/videos")
-    @ResponseStatus(HttpStatus.CREATED)
-    public PTVideoDTO createVideo(@RequestBody PTVideoDTO video) {
-        return video;
+    //GET para pruebas (solo lee de PeerTube y lo muestra, no lo envía)
+    @GetMapping("/{id}")
+    public Channel getChannelTest(
+            @PathVariable String id,
+            @RequestParam(defaultValue = "10") int maxVideos,
+            @RequestParam(defaultValue = "2") int maxComments) {
+        return peerTubeService.getChannel(id, maxVideos, maxComments);
     }
 
-    @PostMapping("/channels")
+    //POST oficial (Leer de PeerTube y lo envía a VideoMiner)
+    @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public PTChannelDTO createChannel(@RequestBody PTChannelDTO channel) {
+    public Channel createChannel(
+            @PathVariable String id,
+            @RequestParam(defaultValue = "10") int maxVideos,
+            @RequestParam(defaultValue = "2") int maxComments) {
+
+        //1 - Extraer datos
+        Channel channel = peerTubeService.getChannel(id, maxVideos, maxComments);
+        //2 - Enviar a VideoMiner
+        videoMinerService.sendChannelToVideoMiner(channel);
+        //3 - Devolver canal creado
         return channel;
-    }
-
-    @PostMapping("/comments")
-    @ResponseStatus(HttpStatus.CREATED)
-    public PTCommentDTO createComment(@RequestBody PTCommentDTO comment) {
-        return comment;
-    }
-
-    @PostMapping("/captions")
-    @ResponseStatus(HttpStatus.CREATED)
-    public PTCaptionDTO createCaption(@RequestBody PTCaptionDTO caption) {
-        return caption;
-    }
-
-    @PostMapping("/accounts")
-    @ResponseStatus(HttpStatus.CREATED)
-    public PTAccountDTO createAccount(@RequestBody PTAccountDTO account) {
-        return account;
     }
 }
