@@ -125,8 +125,8 @@ public class PeerTubeService {
 
     private Caption mapToCaption(PTCaptionDTO ptCaption) {
         Caption caption = new Caption();
-        caption.setId(UUID.randomUUID().toString()); // Generate ID since not provided
-        caption.setName(ptCaption.getFileUrl());
+        caption.setId(UUID.randomUUID().toString()); // Genera ID ya que no nos la dan
+        caption.setLink(ptCaption.getFileUrl());
         caption.setLanguage(ptCaption.getLanguage());
         return caption;
     }
