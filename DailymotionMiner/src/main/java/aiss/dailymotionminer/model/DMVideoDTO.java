@@ -24,6 +24,9 @@ public class DMVideoDTO {
     @JsonProperty("tags") // IMPORTANTE → comments
     private List<String> tags;
 
+    @JsonProperty("subtitles")
+    private List<DMSubtitleDTO> subtitles;
+
     // Getters y setters
 
     public String getId() {
@@ -72,5 +75,13 @@ public class DMVideoDTO {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public List<DMSubtitleDTO> getSubtitles() {
+        return subtitles;
+    }
+
+    public void setSubtitles(List<DMSubtitleDTO> subtitles) {
+        this.subtitles = subtitles;
     }
 }

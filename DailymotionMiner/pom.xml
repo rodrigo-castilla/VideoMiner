@@ -28,19 +28,25 @@
     <!-- DEPENDENCIAS -->
     <dependencies>
 
-        <!-- REST API -->
+        <!-- REST -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- VALIDATION (opcional pero recomendable) -->
+        <dependency>
+            <groupId>aiss.videominer</groupId>
+            <artifactId>videominer</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- VALIDATION -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- TESTING -->
+        <!-- TEST (ESTO ES LO QUE TE FALTA O NO SE ESTÁ APLICANDO) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

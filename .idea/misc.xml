@@ -6,7 +6,6 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/VideoMiner/pom.xml" />
-        <option value="$PROJECT_DIR$/PeerTubeMiner/pom.xml" />
         <option value="$PROJECT_DIR$/DailymotionMiner/pom.xml" />
       </list>
     </option>

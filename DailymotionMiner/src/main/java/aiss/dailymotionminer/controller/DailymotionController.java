@@ -2,14 +2,14 @@ package aiss.dailymotionminer.controller;
 
 import aiss.dailymotionminer.service.DailymotionService;
 import aiss.dailymotionminer.service.VideoMinerService;
-import aiss.dailymotionminer.model.Channel;
+import aiss.videominer.model.Channel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/dailymotion")
 @CrossOrigin(origins = "*")
-public class DailymotionController {
+public final class DailymotionController {
 
     private final DailymotionService dailymotionService;
     private final VideoMinerService videoMinerService;

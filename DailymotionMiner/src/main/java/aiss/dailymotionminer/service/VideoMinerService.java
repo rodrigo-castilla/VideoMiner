@@ -1,6 +1,6 @@
 package aiss.dailymotionminer.service;
 
-import aiss.dailymotionminer.model.Channel;
+import aiss.videominer.model.Channel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

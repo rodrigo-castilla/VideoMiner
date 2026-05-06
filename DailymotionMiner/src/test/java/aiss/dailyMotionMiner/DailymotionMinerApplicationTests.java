@@ -1,4 +1,4 @@
-package aiss.dailymotionminer;
+package aiss.dailyMotionMiner;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
