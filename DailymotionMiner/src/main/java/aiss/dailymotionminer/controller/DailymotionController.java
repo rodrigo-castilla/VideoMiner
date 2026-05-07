@@ -1,51 +1,52 @@
 package aiss.dailymotionminer.controller;
 
+import aiss.dailymotionminer.model.videominer.*;
 import aiss.dailymotionminer.service.DailymotionService;
 import aiss.dailymotionminer.service.VideoMinerService;
-import aiss.videominer.model.Channel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/dailymotion")
 @CrossOrigin(origins = "*")
-public final class DailymotionController {
+public class DailymotionController {
 
     private final DailymotionService dailymotionService;
     private final VideoMinerService videoMinerService;
 
-    // Inyección por constructor
     public DailymotionController(DailymotionService dailymotionService,
                                  VideoMinerService videoMinerService) {
         this.dailymotionService = dailymotionService;
         this.videoMinerService = videoMinerService;
     }
 
-    // GET para pruebas (no envía a VideoMiner)
-    @GetMapping("/{id}")
-    public Channel getChannelTest(
-            @PathVariable String id,
-            @RequestParam(defaultValue = "10") int maxVideos,
-            @RequestParam(defaultValue = "2") int maxPages) {
-
-        return dailymotionService.getChannel(id, maxVideos, maxPages);
+    @GetMapping("/status")
+    public String status() {
+        return "DailymotionMiner is running";
     }
 
-    // POST oficial
-    @PostMapping("/{id}")
+    @PostMapping("/channels")
     @ResponseStatus(HttpStatus.CREATED)
-    public Channel createChannel(
-            @PathVariable String id,
-            @RequestParam(defaultValue = "10") int maxVideos,
-            @RequestParam(defaultValue = "2") int maxPages) {
-
-        // 1 - extraer datos de Dailymotion
-        Channel channel = dailymotionService.getChannel(id, maxVideos, maxPages);
-
-        // 2 - enviar a VideoMiner
+    public Channel createChannel(@RequestBody Channel channel) {
         videoMinerService.sendChannelToVideoMiner(channel);
-
-        // 3 - devolver respuesta
         return channel;
+    }
+
+    @PostMapping("/videos")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Video createVideo(@RequestBody Video video) {
+        return video;
+    }
+
+    @PostMapping("/comments")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Comment createComment(@RequestBody Comment comment) {
+        return comment;
+    }
+
+    @PostMapping("/captions")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Caption createCaption(@RequestBody Caption caption) {
+        return caption;
     }
 }

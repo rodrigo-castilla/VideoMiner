@@ -16,7 +16,7 @@ public class Video {
     @JsonProperty("id")
     private String id;
 
-    @JsonProperty("name")
+    @JsonProperty("title")
     @NotEmpty(message = "Video name cannot be empty")
     private String name;
 

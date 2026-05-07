@@ -1,16 +1,19 @@
-package aiss.dailyMotionMiner.controller;
+package aiss.dailymotionminer.controller;
 
-import aiss.dailymotionminer.controller.DailymotionController;
-import org.springframework.test.web.servlet.MockMvc;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import aiss.dailymotionminer.service.DailymotionService;
+import aiss.dailymotionminer.service.VideoMinerService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.mockito.ArgumentMatchers.any;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(DailymotionController.class)
 class DailymotionControllerTests {
@@ -18,6 +21,13 @@ class DailymotionControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
+    @MockBean
+    private DailymotionService dailymotionService;
+
+    @MockBean
+    private VideoMinerService videoMinerService;
+
+    // STATUS
     @Test
     void statusEndpointReturnsRunning() throws Exception {
         mockMvc.perform(get("/api/dailymotion/status"))
@@ -25,6 +35,7 @@ class DailymotionControllerTests {
                 .andExpect(content().string("DailymotionMiner is running"));
     }
 
+    // CHANNEL
     @Test
     void createChannelReturnsCreatedAndEchoesChannel() throws Exception {
 
@@ -45,6 +56,7 @@ class DailymotionControllerTests {
                 .andExpect(jsonPath("$.description").value("Channel desc"));
     }
 
+    // VIDEO
     @Test
     void createVideoReturnsCreatedAndEchoesVideo() throws Exception {
 
@@ -65,6 +77,7 @@ class DailymotionControllerTests {
                 .andExpect(jsonPath("$.description").value("A sample video"));
     }
 
+    // COMMENT
     @Test
     void createCommentFromTagReturnsCreated() throws Exception {
 
@@ -81,6 +94,7 @@ class DailymotionControllerTests {
                 .andExpect(jsonPath("$.text").value("music"));
     }
 
+    // CAPTION
     @Test
     void createCaptionReturnsCreatedAndEchoesCaption() throws Exception {
 

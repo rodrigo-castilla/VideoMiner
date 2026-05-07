@@ -12,7 +12,7 @@ public class Caption {
     @JsonProperty("id")
     private String id;
 
-    @JsonProperty("link")
+    @JsonProperty("url")
     private String link;
 
     @JsonProperty("language")
