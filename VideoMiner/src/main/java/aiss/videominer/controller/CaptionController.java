@@ -10,19 +10,17 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/captions")
+@RequestMapping("/videominer/captions")
 public class CaptionController {
 
     @Autowired
     private CaptionRepository repository;
 
-    // "listar todas las captions"
     @GetMapping
     public List<Caption> findAll() {
         return repository.findAll();
     }
 
-    // "buscarlas por id"
     @GetMapping("/{id}")
     public Caption findOne(@PathVariable String id) {
         return repository.findById(id).orElseThrow(() ->

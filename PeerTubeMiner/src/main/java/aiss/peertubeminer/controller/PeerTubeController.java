@@ -1,57 +1,37 @@
 package aiss.peertubeminer.controller;
 
-import aiss.peertubeminer.model.PTAccountDTO;
-import aiss.peertubeminer.model.PTCaptionDTO;
-import aiss.peertubeminer.model.PTChannelDTO;
-import aiss.peertubeminer.model.PTCommentDTO;
-import aiss.peertubeminer.model.PTVideoDTO;
+import aiss.peertubeminer.service.PeerTubeService;
+import aiss.peertubeminer.service.VideoMinerService;
+import aiss.peertubeminer.model.videominer.Channel; // Ojo a este import, debe ser tu modelo
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/peertube")
-@CrossOrigin(origins = "*")
 public class PeerTubeController {
 
-    @GetMapping("/status")
-    public String status() {
-        return "PeerTubeMiner is running";
-    }
+    @Autowired
+    private PeerTubeService peerTubeService;
 
-    @PostMapping("/videos")
-    @ResponseStatus(HttpStatus.CREATED)
-    public PTVideoDTO createVideo(@RequestBody PTVideoDTO video) {
-        return video;
-    }
+    @Autowired
+    private VideoMinerService videoMinerService;
 
-    @PostMapping("/channels")
+    // ¡ESTA ES LA LÍNEA CLAVE QUE FALTA!
+    @PostMapping("/channels/{channelId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public PTChannelDTO createChannel(@RequestBody PTChannelDTO channel) {
+    public Channel mineChannel(
+            @PathVariable String channelId,
+            @RequestParam(defaultValue = "10") int maxVideos,
+            @RequestParam(defaultValue = "10") int maxComments) {
+
+        // 1. Extraer datos de la API externa (PeerTube)
+        Channel channel = peerTubeService.getChannel(channelId, maxVideos, maxComments);
+
+        // 2. Enviar los datos al Almacén Central (VideoMiner)
+        videoMinerService.sendChannelToVideoMiner(channel);
+
+        // 3. Devolver el canal
         return channel;
-    }
-
-    @PostMapping("/comments")
-    @ResponseStatus(HttpStatus.CREATED)
-    public PTCommentDTO createComment(@RequestBody PTCommentDTO comment) {
-        return comment;
-    }
-
-    @PostMapping("/captions")
-    @ResponseStatus(HttpStatus.CREATED)
-    public PTCaptionDTO createCaption(@RequestBody PTCaptionDTO caption) {
-        return caption;
-    }
-
-    @PostMapping("/accounts")
-    @ResponseStatus(HttpStatus.CREATED)
-    public PTAccountDTO createAccount(@RequestBody PTAccountDTO account) {
-        return account;
     }
 }

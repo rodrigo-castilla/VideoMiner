@@ -1,24 +1,18 @@
 package aiss.peertubeminer.service;
 
-import aiss.peertubeminer.model.PTChannelDTO;
+import aiss.peertubeminer.model.videominer.Channel; // Importante: debe usar el modelo estandarizado
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.RestClientException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
 
-/**
- * Envia datos de channel de PeerTube a la aplicación VideoMiner.
- * - Recibe el objeto Channel mapeado
- * - Lo envia a VideoMiner con POST
- * - Devuelve la respuesta o lanza error si falla
- */
 @Service
 public class VideoMinerService {
 
     private final RestTemplate restTemplate;
 
+    // Apunta al puerto 8080 donde está tu VideoMiner
     @Value("${videominer.url:http://localhost:8080}")
     private String videoMinerUrl;
 
@@ -26,13 +20,14 @@ public class VideoMinerService {
         this.restTemplate = restTemplate;
     }
 
-    //Envía un Channel de PeerTube a la aplicación de VideoMiner
-    public ResponseEntity<String> sendChannelToVideoMiner(PTChannelDTO channel) {
-        String url = videoMinerUrl + "/videominer/channels";
-        
+    // Envía el Channel ya formateado a la aplicación de VideoMiner
+    public ResponseEntity<Channel> sendChannelToVideoMiner(Channel channel) {
+        String url = videoMinerUrl + "/videominer/channels"; // Tu ruta exacta
+
         try {
-            EntidadREspuesta<String> respuesta = restTemplate.postForEntity(url, channel, String.class);
-            
+            // Corrección: ResponseEntity en lugar de EntidadREspuesta
+            ResponseEntity<Channel> respuesta = restTemplate.postForEntity(url, channel, Channel.class);
+
             if (respuesta.getStatusCode().is2xxSuccessful()) {
                 return respuesta;
             } else {
