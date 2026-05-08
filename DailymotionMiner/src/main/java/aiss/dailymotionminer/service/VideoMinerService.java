@@ -11,7 +11,7 @@ public class VideoMinerService {
     private final RestTemplate restTemplate;
 
     @Value("${videominer.url:http://localhost:8080}")
-    private String videoMinerUrl;
+    private String videoMinerUrl = "http://localhost:8080/api";
 
     public VideoMinerService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
@@ -19,7 +19,7 @@ public class VideoMinerService {
 
     // REAL: enviar channel
     public Channel sendChannelToVideoMiner(Channel channel) {
-        String url = videoMinerUrl + "/videominer/channels";
+        String url = videoMinerUrl + "/channels";
         restTemplate.postForEntity(url, channel, String.class);
         return channel;
     }
