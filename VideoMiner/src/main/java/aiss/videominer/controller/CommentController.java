@@ -10,19 +10,17 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/comments")
+@RequestMapping("/videominer/comments")
 public class CommentController {
 
     @Autowired
     private CommentRepository repository;
 
-    // "listar todos los comentarios"
     @GetMapping
     public List<Comment> findAll() {
         return repository.findAll();
     }
 
-    // "buscarlos por id"
     @GetMapping("/{id}")
     public Comment findOne(@PathVariable String id) {
         return repository.findById(id).orElseThrow(() ->

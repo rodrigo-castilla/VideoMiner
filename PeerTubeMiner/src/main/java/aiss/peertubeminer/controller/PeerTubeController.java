@@ -2,46 +2,42 @@ package aiss.peertubeminer.controller;
 
 import aiss.peertubeminer.service.PeerTubeService;
 import aiss.peertubeminer.service.VideoMinerService;
-import aiss.videominer.model.Channel;
+import aiss.peertubeminer.model.videominer.Channel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/peertube")
-@CrossOrigin(origins = "*")
 public class PeerTubeController {
 
-    private final PeerTubeService peerTubeService;
-    private final VideoMinerService videoMinerService;
+    @Autowired
+    private PeerTubeService peerTubeService;
 
-    //Inyección de dependencias de Spring Boot
-    public PeerTubeController(PeerTubeService peerTubeService, VideoMinerService videoMinerService) {
-        this.peerTubeService = peerTubeService;
-        this.videoMinerService = videoMinerService;
-    }
+    @Autowired
+    private VideoMinerService videoMinerService;
 
-    //GET para pruebas (solo lee de PeerTube y lo muestra, no lo envía)
-    @GetMapping("/{id}")
-    public Channel getChannelTest(
-            @PathVariable String id,
-            @RequestParam(defaultValue = "10") int maxVideos,
-            @RequestParam(defaultValue = "2") int maxComments) {
-        return peerTubeService.getChannel(id, maxVideos, maxComments);
-    }
-
-    //POST oficial (Leer de PeerTube y lo envía a VideoMiner)
-    @PostMapping("/{id}")
+    // Operación POST: Mina el canal y lo ENVÍA a VideoMiner
+    @PostMapping("/channels/{channelId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Channel createChannel(
-            @PathVariable String id,
+    public Channel mineChannel(
+            @PathVariable String channelId,
             @RequestParam(defaultValue = "10") int maxVideos,
-            @RequestParam(defaultValue = "2") int maxComments) {
+            @RequestParam(defaultValue = "10") int maxComments) {
 
-        //1 - Extraer datos
-        Channel channel = peerTubeService.getChannel(id, maxVideos, maxComments);
-        //2 - Enviar a VideoMiner
+        Channel channel = peerTubeService.getChannel(channelId, maxVideos, maxComments);
         videoMinerService.sendChannelToVideoMiner(channel);
-        //3 - Devolver canal creado
         return channel;
+    }
+
+    // NUEVA Operación GET: Solo lectura para pruebas (NO envía a VideoMiner)
+    @GetMapping("/channels/{channelId}")
+    public Channel checkChannel(
+            @PathVariable String channelId,
+            @RequestParam(defaultValue = "10") int maxVideos,
+            @RequestParam(defaultValue = "10") int maxComments) {
+
+        // Solo recuperamos los datos de PeerTube y los devolvemos al usuario
+        return peerTubeService.getChannel(channelId, maxVideos, maxComments);
     }
 }
