@@ -1,6 +1,5 @@
-package aiss.peerTubeMiner.controller;
+package aiss.peertubeminer.controller;
 
-import aiss.peertubeminer.controller.PeerTubeController;
 import aiss.peertubeminer.service.PeerTubeService;
 import aiss.peertubeminer.service.VideoMinerService;
 import aiss.peertubeminer.model.videominer.Channel;
@@ -12,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -23,7 +23,7 @@ class PeerTubeControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
-    // Simulamos los servicios para que el test no haga peticiones HTTP reales a internet
+    // Creamos "dobles de acción" para que no salgan a internet ni a otros puertos
     @MockBean
     private PeerTubeService peerTubeService;
 
@@ -32,21 +32,28 @@ class PeerTubeControllerTests {
 
     @Test
     void mineChannelReturnsCreatedChannel() throws Exception {
-        // 1. Preparamos un canal de prueba simulado
-        Channel mockChannel = new Channel();
-        mockChannel.setId("c1");
-        mockChannel.setName("Canal de Prueba");
-        mockChannel.setDescription("Descripción de prueba");
 
-        // 2. Le decimos al servicio falso que cuando le pidan un canal, devuelva el nuestro
+        // 1. PREPARAR: Creamos los datos falsos que escupirá nuestro Mock
+        Channel mockChannel = new Channel();
+        mockChannel.setId("arch-channel-1");
+        mockChannel.setName("Arch Linux Global");
+        mockChannel.setDescription("Canal oficial de tutoriales del sistema");
+
+        // Le decimos al mock: "Cuando alguien llame a getChannel con los parámetros que
+        // sea, devuelve mockChannel"
         when(peerTubeService.getChannel(anyString(), anyInt(), anyInt())).thenReturn(mockChannel);
 
-        // 3. Hacemos la petición POST al nuevo endpoint correcto que definimos antes
-        mockMvc.perform(post("/api/peertube/channels/c1")
-                        .param("maxVideos", "10")
-                        .param("maxComments", "10"))
+        // 2. ACTUAR & 3. COMPROBAR
+        // Usamos mockMvc para simular la petición POST interna
+        mockMvc.perform(post("/api/peertube/channels/arch-channel-1")
+                .param("maxVideos", "10")
+                .param("maxComments", "10"))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value("c1"))
-                .andExpect(jsonPath("$.name").value("Canal de Prueba"));
+                .andExpect(jsonPath("$.id").value("arch-channel-1"))
+                .andExpect(jsonPath("$.name").value("Arch Linux Global"));
+
+        // Verificación extra: Comprobamos que el controlador realmente le ha pasado la
+        // pelota al VideoMinerService
+        verify(videoMinerService).sendChannelToVideoMiner(mockChannel);
     }
 }
