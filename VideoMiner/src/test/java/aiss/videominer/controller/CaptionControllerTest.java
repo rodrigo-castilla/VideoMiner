@@ -26,7 +26,7 @@ public class CaptionControllerTest {
         Caption mokCaption = new Caption();
         mokCaption.setId(id);
         mokCaption.setLanguage("en");
-        mokCaption.setLink("http://subtitulos.test/en");
+        mokCaption.setName("http://subtitulos.test/en"); // <--- CAMBIADO DE setLink A setName
         return mokCaption;
     }
 

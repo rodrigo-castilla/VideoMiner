@@ -40,7 +40,7 @@ public class VideoControllerTest {
         Caption mokCaption = new Caption();
         mokCaption.setId("cap-" + id);
         mokCaption.setLanguage("es");
-        mokCaption.setLink("http://subtitulos.test/es");
+        mokCaption.setName("http://subtitulos.test/es"); // <--- CAMBIADO DE setLink A setName
 
         // Preparamos un comentario falso anidado para probar la ruta /{id}/comments
         Comment mokComment = new Comment();
