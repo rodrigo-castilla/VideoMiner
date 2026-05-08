@@ -2,8 +2,7 @@ package aiss.peertubeminer.controller;
 
 import aiss.peertubeminer.service.PeerTubeService;
 import aiss.peertubeminer.service.VideoMinerService;
-import aiss.peertubeminer.model.videominer.Channel; // Corregido según tu estructura
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +28,7 @@ public class PeerTubeController {
 
         // 2. Envía los datos al VideoMiner (puerto 8080)
         videoMinerService.sendChannelToVideoMiner(channel);
+
 
         return channel;
     }
