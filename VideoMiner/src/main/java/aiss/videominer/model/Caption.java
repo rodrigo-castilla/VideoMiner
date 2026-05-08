@@ -12,8 +12,9 @@ public class Caption {
     @JsonProperty("id")
     private String id;
 
-    @JsonProperty("link")
-    private String link;
+    // Cambiado 'link' por 'name' para que coincida con el JSON del minero
+    @JsonProperty("name")
+    private String name;
 
     @JsonProperty("language")
     private String language;
@@ -27,10 +28,13 @@ public class Caption {
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
-    public String getLink() { return link; }
-    public void setLink(String link) { this.link = link; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
     public String getLanguage() { return language; }
     public void setLanguage(String language) { this.language = language; }
+
     public Video getVideo() { return video; }
     public void setVideo(Video video) { this.video = video; }
 }
