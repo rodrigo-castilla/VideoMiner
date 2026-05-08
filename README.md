@@ -51,7 +51,7 @@ Proyecto_Integracion_Final/
         │   │   └── DailymotionController.java
         │   ├── model/                 # (NUEVO) Clases para traducir el JSON de Dailymotion
         │   │   └── dailymotion/       # Modelos exactos de la API de Dailymotion
-        │   │   └── videominer/        # Modelos idénticos a los de VideoMiner para enviar
+        │   │   └── 
         │   └── service/               # (NUEVO) Lógica de conexión externa
         │       └── DailymotionService.java # Hace el GET, adapta los Tags a Comments, y envía
         └── test/java/aiss/dailymotionminer/
