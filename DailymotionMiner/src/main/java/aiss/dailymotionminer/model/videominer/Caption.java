@@ -2,24 +2,18 @@ package aiss.dailymotionminer.model.videominer;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
 
-@Entity
-@Table(name = "Caption")
 public class Caption {
 
-    @Id
     @JsonProperty("id")
     private String id;
 
-    @JsonProperty("url")
+    @JsonProperty("link")
     private String link;
 
     @JsonProperty("language")
     private String language;
 
-    @ManyToOne
-    @JoinColumn(name = "video_id")
     @JsonBackReference
     private Video video;
 
