@@ -21,3 +21,5 @@ VideoMiner/.mvn/wrapper/maven-wrapper.jar
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 application-test.properties
+bin/
+.settings/
