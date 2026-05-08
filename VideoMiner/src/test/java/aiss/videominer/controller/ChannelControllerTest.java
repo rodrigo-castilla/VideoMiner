@@ -1,6 +1,7 @@
 package aiss.videominer.controller;
 
 import aiss.videominer.model.Channel;
+import aiss.videominer.repository.ChannelRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,35 +12,69 @@ import org.springframework.http.ResponseEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-// Esta etiqueta levanta tu aplicación Spring Boot en un puerto aleatorio para hacer la prueba
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ChannelControllerTest {
 
-    // TestRestTemplate es nuestro "Postman integrado". Nos permite hacer peticiones
-    // GET, POST, etc.
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Autowired
+    private ChannelRepository repository;
+
+    private Channel crearCanalFalso(String id) {
+        Channel mokChannel = new Channel();
+        mokChannel.setId(id); // Le pasamos el ID por parámetro para poder variar
+        mokChannel.setName("mokChannel");
+        mokChannel.setDescription("mok description for test");
+        mokChannel.setCreatedTime("2026-05-08T10:00:00Z");
+        return mokChannel;
+    }
+
     @Test
-    public void listChannels() {
-
-        // 1. PREPARAR (Arrange)
-        // En este caso tan sencillo, la preparación es simplemente saber a qué URL
-        // vamos a llamar.
+    public void getAllChannels() {
         String url = "/videominer/channels";
-
-        // 2. ACTUAR (Act)
-        // Hacemos una petición GET a la URL. Le decimos que esperamos un Array de la
-        // clase Channel.
         ResponseEntity<Channel[]> response = restTemplate.getForEntity(url, Channel[].class);
 
-        // 3. COMPROBAR (Assert)
-        // Comprobación A: El servidor nos debe devolver un código 200 OK (todo ha ido
-        // bien)
         assertEquals(HttpStatus.OK, response.getStatusCode(), "El endpoint debería devolver un código 200 OK");
-
-        // Comprobación B: El cuerpo de la respuesta (la lista de canales) no debe ser
-        // nulo.
         assertNotNull(response.getBody(), "La lista de canales devuelta no debería ser nula");
+    }
+
+    @Test
+    public void getChannel() {
+        // Create and save Channel
+        Channel mokChannel = crearCanalFalso("mok-123");
+        repository.save(mokChannel);
+
+        String url = "/videominer/channels/{id}";
+
+        ResponseEntity<Channel> response = restTemplate.getForEntity(url, Channel.class, mokChannel.getId());
+
+        assertEquals(HttpStatus.OK, response.getStatusCode(), "Debería devolver 200 OK porque el canal existe");
+        assertNotNull(response.getBody(), "El cuerpo de la respuesta no debe ser nulo");
+        assertEquals(mokChannel.getId(), response.getBody().getId(),
+                "El ID del canal devuelto no coincide con el solicitado");
+    }
+
+    @Test
+    public void notFoundChannel() {
+        String idFalso = "id-que-no-existe-12345";
+        String url = "/videominer/channels/{id}";
+
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, idFalso);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(), "Debería devolver 404 si el canal no existe");
+    }
+
+    @Test
+    public void createChannel() {
+        Channel nuevoCanal = crearCanalFalso("nuevo-canal-456");
+        String url = "/videominer/channels";
+
+        ResponseEntity<Channel> response = restTemplate.postForEntity(url, nuevoCanal, Channel.class);
+
+        assertEquals(HttpStatus.CREATED, response.getStatusCode(), "Debería devolver 201 CREATED al crear el canal");
+        assertNotNull(response.getBody(), "El canal devuelto no debería ser nulo");
+        assertEquals(nuevoCanal.getId(), response.getBody().getId(),
+                "El ID devuelto debe coincidir con el que enviamos");
     }
 }
