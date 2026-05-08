@@ -1,17 +1,11 @@
 package aiss.dailymotionminer.model.videominer;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "VMUser")
 public class User {
 
-    @Id
     @JsonProperty("id")
-    private String id; // ¡Cambiado a String sin GeneratedValue!
+    private String id;
 
     @JsonProperty("name")
     private String name;

@@ -2,17 +2,13 @@ package aiss.dailymotionminer.model.videominer;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "Channel")
 public class Channel {
 
-    @Id
     @JsonProperty("id")
     private String id;
 
@@ -21,7 +17,6 @@ public class Channel {
     private String name;
 
     @JsonProperty("description")
-    @Column(columnDefinition="TEXT")
     private String description;
 
     @JsonProperty("createdTime")
@@ -29,7 +24,6 @@ public class Channel {
     private String createdTime;
 
     @JsonProperty("videos")
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "channel")
     @JsonManagedReference
     private List<Video> videos;
 

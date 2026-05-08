@@ -3,16 +3,13 @@ package aiss.dailymotionminer.model.videominer;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "Video")
 public class Video {
-    @Id
+
     @JsonProperty("id")
     private String id;
 
@@ -21,30 +18,23 @@ public class Video {
     private String name;
 
     @JsonProperty("description")
-    @Column(columnDefinition="TEXT")
     private String description;
 
     @JsonProperty("releaseTime")
     @NotEmpty(message = "Video release time cannot be empty")
     private String releaseTime;
 
-    @ManyToOne
-    @JoinColumn(name = "channel_id")
     @JsonBackReference
     private Channel channel;
 
     @JsonProperty("author")
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "author_id")
     private User author;
 
     @JsonProperty("comments")
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "video")
     @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
 
     @JsonProperty("captions")
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "video")
     @JsonManagedReference
     private List<Caption> captions = new ArrayList<>();
 
