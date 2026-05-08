@@ -17,6 +17,7 @@ public class PeerTubeController {
     @Autowired
     private VideoMinerService videoMinerService;
 
+    // Operación POST: Mina el canal y lo ENVÍA a VideoMiner
     @PostMapping("/channels/{channelId}")
     @ResponseStatus(HttpStatus.CREATED)
     public Channel mineChannel(
@@ -27,5 +28,16 @@ public class PeerTubeController {
         Channel channel = peerTubeService.getChannel(channelId, maxVideos, maxComments);
         videoMinerService.sendChannelToVideoMiner(channel);
         return channel;
+    }
+
+    // NUEVA Operación GET: Solo lectura para pruebas (NO envía a VideoMiner)
+    @GetMapping("/channels/{channelId}")
+    public Channel checkChannel(
+            @PathVariable String channelId,
+            @RequestParam(defaultValue = "10") int maxVideos,
+            @RequestParam(defaultValue = "10") int maxComments) {
+
+        // Solo recuperamos los datos de PeerTube y los devolvemos al usuario
+        return peerTubeService.getChannel(channelId, maxVideos, maxComments);
     }
 }
