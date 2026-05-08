@@ -9,7 +9,12 @@ buildNumber.properties
 VideoMiner/.mvn/timing.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 VideoMiner/.mvn/wrapper/maven-wrapper.jar
-.idea
+# Archivos de configuracion de IntelliJ (para TODOS los subproyectos)
+**/.idea/
+**/*.iml
+
+# ¡OJO! Borra las lineas de mvnw y .mvn de tu gitignore actual
+# para que te deje subirlos al repo.
 # Eclipse m2e generated files
 # Eclipse Core
 .project
