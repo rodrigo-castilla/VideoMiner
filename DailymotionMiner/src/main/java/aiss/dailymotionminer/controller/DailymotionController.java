@@ -1,6 +1,6 @@
 package aiss.dailymotionminer.controller;
 
-import aiss.dailymotionminer.model.videominer.*;
+import aiss.dailymotionminer.model.videominer.Channel;
 import aiss.dailymotionminer.service.DailymotionService;
 import aiss.dailymotionminer.service.VideoMinerService;
 import org.springframework.http.HttpStatus;
@@ -20,33 +20,24 @@ public class DailymotionController {
         this.videoMinerService = videoMinerService;
     }
 
-    @GetMapping("/status")
-    public String status() {
-        return "DailymotionMiner is running";
-    }
-
-    @PostMapping("/channels")
+    // OPERACIÓN POST (Obligatoria): Busca el canal en Dailymotion y lo envía a VideoMiner
+    @PostMapping("/channels/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public Channel createChannel(@RequestBody Channel channel) {
+    public Channel createChannel(@PathVariable String id,
+                                 @RequestParam(defaultValue = "10") int maxVideos,
+                                 @RequestParam(defaultValue = "2") int maxPages) {
+
+        Channel channel = dailymotionService.getChannel(id, maxVideos, maxPages);
         videoMinerService.sendChannelToVideoMiner(channel);
         return channel;
     }
 
-    @PostMapping("/videos")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Video createVideo(@RequestBody Video video) {
-        return video;
-    }
+    // OPERACIÓN GET (Recomendada para pruebas): Busca en Dailymotion pero NO envía a VideoMiner
+    @GetMapping("/channels/{id}")
+    public Channel getChannel(@PathVariable String id,
+                              @RequestParam(defaultValue = "10") int maxVideos,
+                              @RequestParam(defaultValue = "2") int maxPages) {
 
-    @PostMapping("/comments")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Comment createComment(@RequestBody Comment comment) {
-        return comment;
-    }
-
-    @PostMapping("/captions")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Caption createCaption(@RequestBody Caption caption) {
-        return caption;
+        return dailymotionService.getChannel(id, maxVideos, maxPages);
     }
 }
