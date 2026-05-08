@@ -4,7 +4,6 @@ import aiss.peertubeminer.model.videominer.Channel;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.http.ResponseEntity;
 
 @Service
 public class VideoMinerService {
@@ -19,11 +18,12 @@ public class VideoMinerService {
     }
 
     public void sendChannelToVideoMiner(Channel channel) {
-        // La ruta del controlador en tu VideoMiner es /api/channels
-        String url = videoMinerUrl + "/api/channels";
+        // ¡Cambiado a la ruta correcta de VideoMiner!
+        String url = videoMinerUrl + "/videominer/channels";
 
         try {
             restTemplate.postForEntity(url, channel, Channel.class);
+            System.out.println("¡Canal enviado a VideoMiner correctamente!");
         } catch (Exception e) {
             System.err.println("Error enviando a VideoMiner: " + e.getMessage());
         }

@@ -2,7 +2,8 @@ package aiss.peertubeminer.controller;
 
 import aiss.peertubeminer.service.PeerTubeService;
 import aiss.peertubeminer.service.VideoMinerService;
-import org.springframework.http.HttpStatus;
+import aiss.peertubeminer.model.videominer.Channel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ public class PeerTubeController {
     @Autowired
     private VideoMinerService videoMinerService;
 
+    // Operación POST: Mina el canal y lo ENVÍA a VideoMiner
     @PostMapping("/channels/{channelId}")
     @ResponseStatus(HttpStatus.CREATED)
     public Channel mineChannel(
@@ -23,13 +25,19 @@ public class PeerTubeController {
             @RequestParam(defaultValue = "10") int maxVideos,
             @RequestParam(defaultValue = "10") int maxComments) {
 
-        // 1. Descarga los datos de PeerTube
         Channel channel = peerTubeService.getChannel(channelId, maxVideos, maxComments);
-
-        // 2. Envía los datos al VideoMiner (puerto 8080)
         videoMinerService.sendChannelToVideoMiner(channel);
-
-
         return channel;
+    }
+
+    // NUEVA Operación GET: Solo lectura para pruebas (NO envía a VideoMiner)
+    @GetMapping("/channels/{channelId}")
+    public Channel checkChannel(
+            @PathVariable String channelId,
+            @RequestParam(defaultValue = "10") int maxVideos,
+            @RequestParam(defaultValue = "10") int maxComments) {
+
+        // Solo recuperamos los datos de PeerTube y los devolvemos al usuario
+        return peerTubeService.getChannel(channelId, maxVideos, maxComments);
     }
 }
