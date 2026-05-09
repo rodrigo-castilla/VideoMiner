@@ -1,6 +1,5 @@
-package aiss.peerTubeMiner.controller;
+package aiss.peertubeminer.controller;
 
-import aiss.peertubeminer.controller.PeerTubeController;
 import aiss.peertubeminer.service.PeerTubeService;
 import aiss.peertubeminer.service.VideoMinerService;
 import aiss.peertubeminer.model.videominer.Channel;
@@ -23,7 +22,8 @@ class PeerTubeControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
-    // Simulamos los servicios para que el test no haga peticiones HTTP reales a internet
+    // Simulamos los servicios para que el test no haga peticiones HTTP reales a
+    // internet
     @MockBean
     private PeerTubeService peerTubeService;
 
@@ -38,13 +38,14 @@ class PeerTubeControllerTests {
         mockChannel.setName("Canal de Prueba");
         mockChannel.setDescription("Descripción de prueba");
 
-        // 2. Le decimos al servicio falso que cuando le pidan un canal, devuelva el nuestro
+        // 2. Le decimos al servicio falso que cuando le pidan un canal, devuelva el
+        // nuestro
         when(peerTubeService.getChannel(anyString(), anyInt(), anyInt())).thenReturn(mockChannel);
 
         // 3. Hacemos la petición POST al nuevo endpoint correcto que definimos antes
         mockMvc.perform(post("/api/peertube/channels/c1")
-                        .param("maxVideos", "10")
-                        .param("maxComments", "10"))
+                .param("maxVideos", "10")
+                .param("maxComments", "10"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value("c1"))
                 .andExpect(jsonPath("$.name").value("Canal de Prueba"));
