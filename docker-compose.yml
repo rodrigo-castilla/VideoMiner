@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  videominer:
+    build: 
+      context: ./VideoMiner
+    container_name: videominer
+    ports:
+      - "8080:8080"
+    networks:
+      - miner-network
+
+  peertubeminer:
+    build: 
+      context: ./PeerTubeMiner
+    container_name: peertubeminer
+    ports:
+      - "8081:8081"
+    environment:
+      - VIDEOMINER_URL=http://videominer:8080
+    networks:
+      - miner-network
+    depends_on:
+      - videominer
+
+  dailymotionminer:
+    build: 
+      context: ./DailymotionMiner
+    container_name: dailymotionminer
+    ports:
+      - "8082:8082"
+    environment:
+      - VIDEOMINER_URL=http://videominer:8080
+    networks:
+      - miner-network
+    depends_on:
+      - videominer
+
+networks:
+  miner-network:
+    driver: bridge
