@@ -23,7 +23,6 @@ class PeerTubeControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
-    // Creamos "dobles de acción" para que no salgan a internet ni a otros puertos
     @MockBean
     private PeerTubeService peerTubeService;
 
